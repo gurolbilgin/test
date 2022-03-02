@@ -1,23 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Table from "./components/Table";
 
 function App() {
+  const [inputs, setInputs] = useState([]);
+
+  const eventHandler = (e) => {
+    e.preventDefault();
+    let targets = e.target;
+
+    setInputs([
+      {
+        firstname: targets[0].value,
+        lastname: targets[1].value,
+        phone: targets[2].value,
+      },
+      ...inputs,
+    ]);
+    targets[0].value = "";
+    targets[1].value = "";
+    targets[2].value = "";
+  };
+
+  // Sorts entries with their lastnames
+  const sortedInputs = inputs.sort((a, b) => {
+    const nameA = a.lastname.toUpperCase();
+    const nameB = b.lastname.toUpperCase();
+    if (nameA < nameB) return -1;
+    if (nameA > nameB) return 1;
+
+    return 0;
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form action="" onSubmit={(e) => eventHandler(e)}>
+        <input type="text" placeholder="firstname" />
+        <input type="text" placeholder="lastname" />
+        <input type="number" placeholder="phone" />
+        <input type="submit" />
+        <Table inputs={sortedInputs} />
+      </form>
     </div>
   );
 }
